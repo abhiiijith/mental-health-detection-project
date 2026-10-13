@@ -1,0 +1,1500 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Mental Health Interface</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+
+  <style>
+    :root {
+      --bg-color: #f6fff8;
+      --primary-color: #2e8b57;
+      --accent-color: #3fa66b;
+      --card-bg: #FFFFFF;
+      --text-color: #2c2c2c;
+      --secondary-bg: #e8f5e9;
+      --border-color: #e8f5e9;
+      --shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html,
+    body {
+      height: 100%;
+      overflow: hidden;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background: var(--bg-color);
+      color: var(--text-color);
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ================= HEADER ================= */
+    .main-header {
+      background: var(--card-bg);
+      padding: 12px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid var(--border-color);
+      box-shadow: var(--shadow);
+      z-index: 100;
+    }
+
+    .header-brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .header-brand h1 {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--primary-color);
+    }
+
+    .header-nav {
+      display: flex;
+      gap: 20px;
+    }
+
+    .nav-link {
+      text-decoration: none;
+      color: #666;
+      font-size: 0.9rem;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: color 0.2s;
+    }
+
+    .nav-link:hover {
+      color: var(--primary-color);
+    }
+
+    /* ================= DASHBOARD LAYOUT ================= */
+    .dashboard-container {
+      display: grid;
+      grid-template-columns: 280px 1fr 320px;
+      flex: 1;
+      min-height: 0;
+      /* Essential for grid/flex items to scroll content */
+      overflow: hidden;
+      gap: 0;
+    }
+
+    .panel {
+      display: flex;
+      flex-direction: column;
+      background: var(--card-bg);
+      border-right: 1px solid var(--border-color);
+      min-height: 0;
+      /* Essential for grid items to scroll content */
+    }
+
+    .panel-header {
+      padding: 16px 20px;
+      border-bottom: 1px solid var(--border-color);
+      font-weight: 600;
+      font-size: 0.95rem;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    /* ================= LEFT PANEL ================= */
+    .left-panel {
+      background: var(--secondary-bg);
+      overflow-y: auto;
+      height: 100%;
+    }
+
+    .mode-list {
+      padding: 15px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .mode-item {
+      padding: 12px 15px;
+      background: var(--card-bg);
+      border-radius: 10px;
+      font-size: 0.9rem;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .mode-item:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+      border-color: var(--primary-color);
+    }
+
+    .status-section {
+      padding: 20px;
+      margin-top: auto;
+      border-top: 1px solid var(--border-color);
+    }
+
+    .status-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 10px;
+    }
+
+    .stat-card {
+      background: var(--card-bg);
+      padding: 10px 15px;
+      border-radius: 8px;
+      font-size: 0.85rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .stat-card strong {
+      background: var(--secondary-bg);
+      padding: 2px 8px;
+      border-radius: 10px;
+      color: var(--primary-color);
+    }
+
+    /* ================= CENTER PANEL (CHAT) ================= */
+    .center-panel {
+      border-right: none;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+      min-height: 0;
+    }
+
+    .chat-window {
+      flex: 1;
+      overflow-y: auto;
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      min-height: 0;
+    }
+
+    .message {
+      max-width: 85%;
+      padding: 16px;
+      border-radius: 16px;
+      font-size: 0.95rem;
+      line-height: 1.5;
+      position: relative;
+      box-shadow: var(--shadow);
+    }
+
+    .message.user {
+      align-self: flex-end;
+      background: var(--primary-color);
+      color: white;
+      border-bottom-right-radius: 4px;
+    }
+
+    .message.bot {
+      align-self: flex-start;
+      background: white;
+      color: var(--text-color);
+      border-bottom-left-radius: 4px;
+      border: 1px solid var(--border-color);
+      line-height: 1.7;
+    }
+
+    .message.bot strong { font-weight: 600; }
+    .message.bot em { font-style: italic; }
+    .message.bot ul { margin: 4px 0; padding-left: 8px; list-style: disc; }
+    .message.bot li { margin: 2px 0; }
+    .message.bot h2, .message.bot h3, .message.bot h4 { font-weight: 600; color: var(--primary-color); }
+
+    .message.system {
+      align-self: center;
+      background: #f0f2f5;
+      color: #65676b;
+      font-size: 0.8rem;
+      padding: 6px 16px;
+      border-radius: 20px;
+      box-shadow: none;
+    }
+
+    .input-area {
+      padding: 20px;
+      background: var(--card-bg);
+      border-top: 1px solid var(--border-color);
+    }
+
+    .input-container {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+    }
+
+    #chat-input {
+      flex: 1;
+      padding: 12px 20px;
+      border: 1px solid var(--border-color);
+      border-radius: 25px;
+      outline: none;
+      font-size: 0.95rem;
+      transition: border-color 0.2s;
+    }
+
+    #chat-input:focus {
+      border-color: var(--primary-color);
+    }
+
+    .action-btns {
+      display: flex;
+      gap: 8px;
+    }
+
+    .btn {
+      border: none;
+      cursor: pointer;
+      padding: 10px 16px;
+      border-radius: 20px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.2s;
+    }
+
+    .btn-primary {
+      background: var(--primary-color);
+      color: white;
+    }
+
+    .btn-secondary {
+      background: var(--secondary-bg);
+      color: #555;
+    }
+
+    .btn-accent {
+      background: var(--accent-color);
+      color: white;
+    }
+
+    .btn-danger {
+      background: #ff4d4d;
+      color: white;
+    }
+
+    .btn:hover {
+      opacity: 0.9;
+      transform: translateY(-1px);
+    }
+
+    /* ================= RIGHT PANEL (INSIGHTS) ================= */
+    .right-panel {
+      border-right: none;
+      border-left: 1px solid var(--border-color);
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+      overflow: hidden;
+    }
+
+    .right-content-scroll {
+      flex: 1;
+      overflow-y: auto;
+      padding-bottom: 20px; /* prevents last item from sticking to bottom */
+    }
+
+    .insight-card {
+      margin: 15px;
+      padding: 15px;
+      background: var(--secondary-bg);
+      border-radius: 12px;
+    }
+
+    .insight-card h3 {
+      font-size: 0.85rem;
+      text-transform: uppercase;
+      color: #777;
+      margin-bottom: 10px;
+    }
+
+    .insight-content {
+      font-size: 0.9rem;
+      line-height: 1.5;
+    }
+
+    .mood-timeline {
+      margin: 15px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      max-height: 300px;
+      overflow-y: auto;
+    }
+
+    .timeline-item {
+      display: flex;
+      gap: 10px;
+      font-size: 0.85rem;
+      padding-left: 15px;
+      position: relative;
+      padding-bottom: 10px;
+    }
+
+    .timeline-item::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      width: 2px;
+      background: var(--border-color);
+    }
+
+    .timeline-dot {
+      position: absolute;
+      left: -4px;
+      top: 4px;
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--primary-color);
+    }
+
+    /* ================= CAMERA OVERLAY ================= */
+    .camera-overlay {
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: #0a0a0a;
+      display: none;
+      flex-direction: column;
+      z-index: 1000;
+    }
+
+    .camera-overlay.active {
+      display: flex;
+    }
+
+    .camera-header {
+      padding: 14px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      color: white;
+      background: rgba(0,0,0,0.55);
+      backdrop-filter: blur(8px);
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+      flex-shrink: 0;
+    }
+
+    .camera-view {
+      flex: 1;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #000;
+      overflow: hidden;
+    }
+
+    video {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    /* Live emotion badge on camera */
+    .live-badge {
+      position: absolute;
+      top: 14px;
+      left: 14px;
+      background: rgba(0,0,0,0.65);
+      backdrop-filter: blur(6px);
+      color: white;
+      padding: 5px 14px;
+      border-radius: 20px;
+      font-size: 0.82rem;
+      font-weight: 600;
+      z-index: 1200;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      border: 1px solid rgba(255,255,255,0.1);
+    }
+
+    .live-dot {
+      width: 7px; height: 7px;
+      background: #00ff88;
+      border-radius: 50%;
+      animation: blink 1.4s infinite;
+    }
+
+    @keyframes blink {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.2; }
+    }
+
+    #faceBox {
+      position: absolute;
+      border: 2px solid #00ff88;
+      border-radius: 6px;
+      box-shadow: 0 0 10px rgba(0, 255, 136, 0.6);
+      pointer-events: none;
+      z-index: 1100;
+      transition: all 0.15s ease;
+    }
+
+    .emotion-overlay { display: none; } /* removed — use live-badge instead */
+  </style>
+</head>
+
+<body>
+
+  {% include 'header.html' %}
+  <main class="dashboard-container">
+    <!-- LEFT PANEL -->
+    <aside class="panel left-panel">
+
+      <!-- SECTION: Modes -->
+      <div class="panel-header">
+        <i class="fas fa-sliders-h"></i> Controls
+      </div>
+      <div class="mode-list">
+        <div class="mode-item" onclick="document.getElementById('chat-input').focus();">
+          <i class="fas fa-keyboard"></i> Text Input
+        </div>
+        <div class="mode-item" onclick="document.getElementById('speech-btn').click();">
+          <i class="fas fa-microphone"></i> Voice Input
+        </div>
+        <div class="mode-item" onclick="document.getElementById('openCameraBtn').click();">
+          <i class="fas fa-video"></i> Live Emotion Scan
+        </div>
+      </div>
+
+      <!-- SECTION: Live Status (compact) -->
+      <div class="status-section">
+        <div class="panel-header" style="padding:0 0 12px 0; border:none; font-size:0.8rem;">
+          <i class="fas fa-heartbeat"></i> Live Status
+        </div>
+
+        <!-- Compact 2-column readings -->
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:6px; margin-bottom:10px;">
+          <div class="stat-card" style="flex-direction:column; align-items:flex-start; gap:2px; padding:8px 10px;">
+            <span style="font-size:10px; color:#9ca3af; text-transform:uppercase;">Face</span>
+            <strong id="chat-camera-emotion" style="font-size:0.8rem;">-</strong>
+          </div>
+          <div class="stat-card" style="flex-direction:column; align-items:flex-start; gap:2px; padding:8px 10px;">
+            <span style="font-size:10px; color:#9ca3af; text-transform:uppercase;">Text</span>
+            <strong id="chat-text-emotion" style="font-size:0.8rem;">-</strong>
+          </div>
+          <div class="stat-card" style="flex-direction:column; align-items:flex-start; gap:2px; padding:8px 10px;">
+            <span style="font-size:10px; color:#9ca3af; text-transform:uppercase;">Voice</span>
+            <strong id="chat-voice-emotion" style="font-size:0.8rem;">-</strong>
+          </div>
+          <div class="stat-card" style="flex-direction:column; align-items:flex-start; gap:2px; padding:8px 10px;
+                      background:var(--primary-color); color:white;">
+            <span style="font-size:10px; color:rgba(255,255,255,0.7); text-transform:uppercase;">State</span>
+            <strong id="chat-dominant-emotion"
+              style="font-size:0.8rem; background:transparent; color:white;">-</strong>
+          </div>
+        </div>
+
+        <!-- Reset -->
+        <button onclick="clearChatBackup(); location.reload();" class="btn btn-secondary"
+          style="width:100%; padding:7px 10px; font-size:0.78rem; border-radius:10px; justify-content:center;">
+          <i class="fas fa-trash"></i> Reset Session
+        </button>
+
+      </div>
+    </aside>
+
+    <!-- CENTER PANEL -->
+    <section class="panel center-panel">
+      <div id="chat-window" class="chat-window">
+        <!-- Messages load here -->
+      </div>
+
+      <!-- Live voice transcript box -->
+      <div id="voiceTranscriptBox"
+        style="display:none; margin:0 0 8px 0; background:#f0fdf4;
+               border:1px solid #bbf7d0; border-radius:10px;
+               padding:9px 14px; font-size:0.85rem; color:#166534;
+               animation:fadeIn 0.2s ease;">
+        <i class="fas fa-microphone" style="margin-right:6px; font-size:0.8rem;"></i>
+        <span id="voiceTranscriptText" style="font-style:italic;">Listening...</span>
+      </div>
+
+      <div class="input-area">
+        <div class="input-container">
+          <input id="chat-input" type="text" placeholder="Share your reflections..." />
+          <div class="action-btns">
+            <button id="send-btn" class="btn btn-primary" title="Send Reflection">
+              <i class="fas fa-paper-plane"></i> Send
+            </button>
+            <button id="speech-btn" class="btn btn-secondary" title="Voice Input">
+              <i class="fas fa-microphone"></i>
+            </button>
+            <button id="openCameraBtn" class="btn btn-accent" title="Start Emotion Scan">
+              <i class="fas fa-camera"></i> Scan
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- CAMERA OVERLAY -->
+      <div id="cameraScreen" class="camera-overlay">
+        <div class="camera-header">
+          <div>
+            <h3>Live Emotion Scan</h3>
+            <p id="camera-status" style="font-size: 0.8rem; opacity: 0.7;">Scanning face...</p>
+          </div>
+          <button id="closeCameraBtn" class="btn btn-danger">
+            <i class="fas fa-times"></i> Stop Scan
+          </button>
+        </div>
+        <div class="camera-view">
+          <!-- scan-indicator circle removed -->
+          <video id="video" autoplay playsinline></video>
+          <div id="faceBox"></div>
+
+          <!-- Live emotion badge -->
+          <div class="live-badge" id="liveBadge">
+            <span class="live-dot"></span>
+            <span id="liveBadgeText">Waiting for input...</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- RIGHT PANEL -->
+    <aside class="panel right-panel">
+      <div class="panel-header">
+        <i class="fas fa-brain"></i> Mental Health Insights
+      </div>
+
+      <div class="right-content-scroll">
+      <!-- Card 1: Live readings (compact row) -->
+      <div class="insight-card">
+        <h3>Current Analysis</h3>
+        <div id="mental-state-analysis" class="insight-content">
+          <div style="text-align:center; color:#9ca3af; padding:16px 8px; font-size:0.85rem; line-height:1.7;">
+            <i class="fas fa-satellite-dish" style="font-size:1.6rem; margin-bottom:8px; display:block; color:#d1d5db;"></i>
+            No active analysis.<br>
+            <span style="font-size:0.8rem;">Start camera or speak to begin.</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card 2: Dominant state — BIG display -->
+      <div style="margin:0 15px 15px; padding:16px 18px;
+                  background:linear-gradient(135deg,#f0fdf4,#dcfce7);
+                  border-radius:14px; border:1px solid #d1fae5;">
+        <div style="font-size:10px; text-transform:uppercase; letter-spacing:0.06em;
+                    color:#6b7280; margin-bottom:8px; font-weight:600;">Dominant State</div>
+        <div id="dominant-display"
+          style="font-size:2rem; font-weight:800; color:var(--primary-color);
+                 text-transform:capitalize; letter-spacing:0.02em;">-</div>
+        <div style="font-size:0.78rem; color:#6b7280; margin-top:4px;">Most likely mental state right now</div>
+      </div>
+
+      <!-- Card 3: AI Insight -->
+      <div class="insight-card" style="background:#FFF9E6;">
+        <h3 style="color:#B28900;">AI Insight</h3>
+        <div id="ai-insight-box" class="insight-content">
+          Share how you're feeling to receive personalized support.
+        </div>
+      </div>
+
+      <!-- Card 4: Timeline (compact) -->
+      <div class="panel-header" style="font-size:0.8rem;">
+        <i class="fas fa-history"></i> Session Timeline
+      </div>
+      <div id="mood-timeline" class="mood-timeline">
+        <!-- Timeline items -->
+      </div>
+      </div>
+    </aside>
+  </main>
+
+  <script>
+    const CURRENT_USER_ID = "{{ user.id }}";
+  </script>
+
+  <script>
+    /* =========================
+       ELEMENTS
+    ========================= */
+    const video = document.getElementById("video");
+    const emotionPill = document.getElementById("emotion-pill");
+
+    const chatCameraLabel = document.getElementById("chat-camera-emotion");
+    const chatTextLabel = document.getElementById("chat-text-emotion");
+    const chatDominantLabel = document.getElementById("chat-dominant-emotion");
+    const chatVoiceLabel = document.getElementById("chat-voice-emotion");
+
+    const chatWindow = document.getElementById("chat-window");
+    const chatInput = document.getElementById("chat-input");
+    const sendBtn = document.getElementById("send-btn");
+    const speechBtn = document.getElementById("speech-btn");
+
+    const chatScreen = document.getElementById("chatScreen");
+    const cameraScreen = document.getElementById("cameraScreen");
+
+
+    const openCameraBtn = document.getElementById("openCameraBtn");
+    const closeCameraBtn = document.getElementById("closeCameraBtn");
+
+    const cameraStatus = document.getElementById("camera-status");
+    const insightBox = document.getElementById("ai-insight-box");
+    const mentalAnalysis = document.getElementById("mental-state-analysis");
+    const moodTimeline = document.getElementById("mood-timeline");
+    const liveBadgeText = document.getElementById("liveBadgeText");
+    const dominantDisplay = document.getElementById("dominant-display");
+
+    /* =========================
+       STATE
+    ========================= */
+    let currentEmotion = "-";
+    let emotionHistory = [];
+    const EMOTION_HISTORY_LENGTH = 5;
+
+    let cameraStream = null;
+    let emotionInterval = null;
+    let isRunning = false;
+    let cameraActive = false;
+
+    /* ── DATA STATE FLAGS (honest UI) ── */
+    let hasFaceData  = false;
+    let hasVoiceData = false;
+    let hasTextData  = false;
+
+    /* ── PTT (PUSH-TO-TALK) FLAGS ── */
+    let isPTTMode     = false;  // true when mic button is active in normal mode
+    let isRecording   = false;  // PTT recording state
+    let finalTranscript = "";   // accumulates speech during PTT recording
+
+    /* ── FACE RESULT PERSISTENCE ── */
+    let lastFaceEmotion  = "-";   // raw DeepFace label
+    let lastMentalState  = "-";   // mapped mental state kept after camera stops
+
+    /* =========================
+       CHAT BACKUP (LOCAL STORAGE)
+    ========================= */
+
+    const CHAT_STORAGE_KEY = `emotion_chat_backup_user_${CURRENT_USER_ID}`;
+
+    function saveChatToStorage() {
+      const messages = [];
+      document.querySelectorAll(".message").forEach(msg => {
+        messages.push({
+          role: msg.classList.contains("user") ? "user" :
+            msg.classList.contains("bot") ? "bot" : "system",
+          text: msg.textContent
+        });
+      });
+
+      localStorage.setItem(CHAT_STORAGE_KEY, JSON.stringify(messages));
+    }
+
+    function loadChatFromStorage() {
+      const saved = localStorage.getItem(CHAT_STORAGE_KEY);
+      if (!saved) return;
+
+      const messages = JSON.parse(saved);
+      chatWindow.innerHTML = "";
+
+      messages.forEach(msg => {
+        const div = document.createElement("div");
+        div.className = "message " + msg.role;
+        if (msg.role === "bot") {
+          div.innerHTML = parseMarkdown(msg.text);
+        } else {
+          div.textContent = msg.text;
+        }
+        chatWindow.appendChild(div);
+      });
+      chatWindow.scrollTop = chatWindow.scrollHeight;
+    }
+
+    function clearChatBackup() {
+      localStorage.removeItem(CHAT_STORAGE_KEY);
+    }
+
+    /* =========================
+       FACE DETECTOR (NEW)
+    ========================= */
+    let faceDetector = null;
+    if ("FaceDetector" in window) {
+      try {
+        faceDetector = new FaceDetector({ fastMode: true, maxDetectedFaces: 1 });
+      } catch (e) {
+        faceDetector = null;
+      }
+    }
+
+    /* =========================
+       UI HELPERS
+    ========================= */
+    function setEmotionPill(el, emotion) {
+      const emo = (emotion || "-").toLowerCase();
+      el.textContent = emo;
+
+      if (emo === "happy") { el.style.background = "#22c55e"; el.style.color = "#052e16"; }
+      else if (emo === "sad") { el.style.background = "#38bdf8"; el.style.color = "#0b1120"; }
+      else if (emo === "angry") { el.style.background = "#f97316"; el.style.color = "#7c2d12"; }
+      else if (emo === "surprise" || emo === "surprised") { el.style.background = "#eab308"; el.style.color = "#422006"; }
+      else { el.style.background = "#e5e7eb"; el.style.color = "#111827"; }
+    }
+
+    //function addMessage(role, text){
+    //  const div = document.createElement("div");
+    //  div.className = "message " + role;
+    //  div.textContent = text;
+    //  chatWindow.appendChild(div);
+    //  chatWindow.scrollTop = chatWindow.scrollHeight;
+    //}
+
+    function parseMarkdown(text) {
+      return text
+        .replace(/\*\*\*(.+?)\*\*\*/g, '<strong><em>$1</em></strong>')
+        .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+        .replace(/\*(.+?)\*/g, '<em>$1</em>')
+        .replace(/^#{3}\s(.+)/gm, '<h4 style="margin:6px 0 2px;">$1</h4>')
+        .replace(/^#{2}\s(.+)/gm, '<h3 style="margin:8px 0 2px;">$1</h3>')
+        .replace(/^#{1}\s(.+)/gm, '<h2 style="margin:10px 0 4px;">$1</h2>')
+        .replace(/^[-•]\s(.+)/gm, '<li style="margin-left:16px;">$1</li>')
+        .replace(/(<li[\s\S]*?<\/li>)/g, '<ul style="padding:4px 0;">$1</ul>')
+        .replace(/\n{2,}/g, '<br><br>')
+        .replace(/\n/g, '<br>');
+    }
+
+    function addMessage(role, text) {
+      // Safety: strip any accidental bracketed emotion-analysis from bot replies
+      let cleanText = text;
+      if (role === "bot") {
+        cleanText = text
+          .replace(/\([^)]*(?:emotion|mental state|feeling|mood|stress|anxiety|depressed)[^)]*\)/gi, "")
+          .replace(/\s{2,}/g, " ")
+          .trim();
+      }
+      const div = document.createElement("div");
+      div.className = "message " + role;
+      if (role === "bot") {
+        div.innerHTML = parseMarkdown(cleanText);
+      } else {
+        div.textContent = cleanText;
+      }
+      chatWindow.appendChild(div);
+      chatWindow.scrollTop = chatWindow.scrollHeight;
+      saveChatToStorage();
+    }
+
+
+    function updateDominantEmotion() {
+      let dom = "-";
+
+      // Priority: Text > Voice > Face (text is most reliable)
+      if (hasTextData && chatTextLabel.textContent && chatTextLabel.textContent !== '-') {
+        dom = chatTextLabel.textContent;
+      } else if (hasVoiceData && chatVoiceLabel.textContent && chatVoiceLabel.textContent !== '-') {
+        dom = chatVoiceLabel.textContent;
+      } else if (hasFaceData && chatCameraLabel.textContent && chatCameraLabel.textContent !== '-') {
+        dom = chatCameraLabel.textContent;
+      }
+
+      if (cameraActive) {
+        dom = chatCameraLabel.textContent;
+      }
+
+      setEmotionPill(chatDominantLabel, dom);
+
+      // Mirror to right panel big display
+      dominantDisplay.textContent = dom;
+      const colorMap = { normal:'#16a34a', stress:'#f59e0b', anxiety:'#ef4444', depressed:'#8b5cf6', happy:'#22c55e', sad:'#38bdf8', angry:'#f97316' };
+      dominantDisplay.style.color = colorMap[dom.toLowerCase()] || 'var(--primary-color)';
+
+      // Only log to timeline when we have real data
+      if (dom !== "-") {
+        addTimelineEntry(dom);
+      }
+    }
+
+    function addTimelineEntry(emotion) {
+      const now = new Date();
+      const timeStr = now.getHours().toString().padStart(2, '0') + ":" +
+        now.getMinutes().toString().padStart(2, '0');
+
+      // Check if last entry is the same to avoid spam
+      const lastEntry = moodTimeline.firstElementChild;
+      if (lastEntry && lastEntry.dataset.emotion === emotion) return;
+
+      const item = document.createElement("div");
+      item.className = "timeline-item";
+      item.dataset.emotion = emotion;
+      item.innerHTML = `
+    <div class="timeline-dot"></div>
+    <span>${timeStr}</span>
+    <strong style="text-transform: capitalize;">${emotion}</strong>
+  `;
+      moodTimeline.prepend(item);
+    }
+
+    function updateEmotionUI(emotion) {
+      currentEmotion = emotion || "-";
+      // Only update left panel + badge when camera is actively showing data
+      if (cameraActive && hasFaceData) {
+        setEmotionPill(chatCameraLabel, currentEmotion);
+        liveBadgeText.textContent = "Live: " + currentEmotion.charAt(0).toUpperCase() + currentEmotion.slice(1);
+      }
+      // Note: when camera stops, we intentionally do NOT reset — stopCamera handles display
+      updateDominantEmotion();
+    }
+
+
+
+    /* =========================
+       CSRF COOKIE (DJANGO)
+    ========================= */
+    function getCookie(name) {
+      let cookieValue = null;
+      if (document.cookie && document.cookie !== "") {
+        const cookies = document.cookie.split(";").map(c => c.trim());
+        for (let c of cookies) {
+          if (c.startsWith(name + "=")) {
+            cookieValue = decodeURIComponent(c.substring(name.length + 1));
+            break;
+          }
+        }
+      }
+      return cookieValue;
+    }
+
+    /* =========================
+       EMOTION FRAME PROCESSING
+    ========================= */
+    /* Map raw DeepFace emotion → mental state label
+       (backend already does this mapping, but we keep a client-side copy
+        so the UI stays correct even if backend mapping changes) */
+    function mapFaceToMentalState(emotion) {
+      switch ((emotion || '').toLowerCase()) {
+        case 'happy':   case 'normal':   return 'normal';
+        case 'sad':     case 'depressed': return 'depressed';
+        case 'angry':   case 'fear':     return 'stress';
+        case 'surprise':                 return 'anxiety';
+        default:                         return emotion || 'normal';
+      }
+    }
+
+    function getDominantEmotion(arr) {
+      const counts = {};
+      arr.forEach(e => counts[e] = (counts[e] || 0) + 1);
+      let maxCount = 0, dom = "-";
+      for (const e in counts) {
+        if (counts[e] > maxCount) {
+          maxCount = counts[e];
+          dom = e;
+        }
+      }
+      return dom;
+    }
+
+    let lastLoggedEmotion = "";
+
+    function logCameraEmotion(emotion) {
+      if (emotion !== lastLoggedEmotion) {
+        addTimelineEntry(emotion);
+        lastLoggedEmotion = emotion;
+      }
+    }
+
+    function updateCameraAnalysis(emotion) {
+      let analysis = `
+        <div style="display:flex;flex-direction:column;gap:8px;">
+
+          <div style="display:flex;justify-content:space-between;">
+            <span>Facial Analysis</span>
+            <strong>${emotion}</strong>
+          </div>
+
+          <div style="display:flex;justify-content:space-between;">
+            <span>Text Analysis</span>
+            <strong>-</strong>
+          </div>
+
+          <div style="display:flex;justify-content:space-between;">
+            <span>Voice Analysis</span>
+            <strong>-</strong>
+          </div>
+
+          <hr>
+
+          <div style="display:flex;justify-content:space-between;">
+            <span>Confidence</span>
+            <strong>Low</strong>
+          </div>
+
+        </div>
+      `;
+
+      mentalAnalysis.innerHTML = analysis;
+    }
+
+    async function sendFrame() {
+      if (!isRunning || !cameraStream) return;
+      if (!video.videoWidth) return; // video not ready yet
+
+      const canvas = document.createElement("canvas");
+      const w = 320, h = 240;
+      canvas.width = w;
+      canvas.height = h;
+
+      const ctx = canvas.getContext("2d");
+      ctx.drawImage(video, 0, 0, w, h);
+
+      /* =========================
+         FACE BOX DETECTION (NEW)
+      ========================= */
+      if (faceDetector) {
+        try {
+          const faces = await faceDetector.detect(canvas);
+
+          if (faces.length > 0) {
+            // pick biggest face
+            const mainFace = faces.sort((a, b) => {
+              const areaA = a.boundingBox.width * a.boundingBox.height;
+              const areaB = b.boundingBox.width * b.boundingBox.height;
+              return areaB - areaA;
+            })[0];
+
+            // Convert canvas coords -> video display coords
+            // Use clientWidth/clientHeight (not getBoundingClientRect) to avoid
+            // page-scroll offset misalignment
+            const displayWidth  = video.clientWidth;
+            const displayHeight = video.clientHeight;
+
+            const scaleX = displayWidth  / w;
+            const scaleY = displayHeight / h;
+
+            const bx = mainFace.boundingBox.x * scaleX;
+            const by = mainFace.boundingBox.y * scaleY;
+            const bw = mainFace.boundingBox.width  * scaleX;
+            const bh = mainFace.boundingBox.height * scaleY;
+
+            showFaceBox(bx, by, bw, bh);
+          } else {
+            hideFaceBox();
+          }
+        } catch (err) {
+          hideFaceBox();
+        }
+      }
+
+      const dataUrl = canvas.toDataURL("image/jpeg");
+
+      try {
+        const response = await fetch("/analyze-emotion/", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "X-CSRFToken": getCookie("csrftoken")
+          },
+          body: JSON.stringify({ image: dataUrl })
+        });
+
+        const result = await response.json();
+        console.log("Emotion result:", result);
+
+        if (result.emotion) {
+          hasFaceData = true; // ── mark as having real face data
+          hasTextData = false;
+          hasVoiceData = false;
+
+          // show emotion immediately
+          updateEmotionUI(result.emotion);
+          
+          // Log to timeline without spam
+          logCameraEmotion(result.emotion);
+
+          // Update insights right panel
+          updateCameraAnalysis(result.emotion);
+
+          emotionHistory.push(result.emotion);
+          if (emotionHistory.length > EMOTION_HISTORY_LENGTH) emotionHistory.shift();
+
+          // ── COLLECT for session fusion ──
+          if (sessionActive) {
+            sessionFaceEmotions.push(result.emotion);
+            if (sessionFaceEmotions.length > 20) sessionFaceEmotions.shift();
+          }
+
+          // smoother dominant emotion — store as final face result
+          if (emotionHistory.length === EMOTION_HISTORY_LENGTH) {
+            const dominant = getDominantEmotion(emotionHistory);
+            lastFaceEmotion = dominant;
+            lastMentalState = mapFaceToMentalState(dominant);
+            updateEmotionUI(lastMentalState);
+          }
+        }
+
+      } catch (e) {
+        console.error(e);
+      }
+    }
+
+    /* =========================
+       CAMERA SCREEN SWITCH
+    ========================= */
+
+    function showChat() {
+      cameraScreen.classList.remove("active");
+    }
+
+    function showCamera() {
+      cameraScreen.classList.add("active");
+      cameraStatus.textContent = "Scanning face...";
+    }
+
+    /* =========================
+       CAMERA START/STOP
+    ========================= */
+    async function startCamera() {
+      try {
+        cameraStream = await navigator.mediaDevices.getUserMedia({
+          video: {
+            width: { ideal: 1280 },
+            height: { ideal: 720 },
+            facingMode: "user"
+          },
+          audio: false
+        });
+
+        video.srcObject = cameraStream;
+
+        cameraActive = true;
+        isRunning = true;
+
+        updateEmotionUI("-");
+        hideFaceBox();
+
+        if (emotionInterval) clearInterval(emotionInterval);
+        emotionInterval = setInterval(sendFrame, 1000);
+
+      } catch (err) {
+        console.error(err);
+        alert("Cannot access camera. Please allow camera permission.");
+        stopCamera();
+        showChat();
+      }
+    }
+    async function stopCamera() {
+      isRunning = false;
+
+      // Visual fade while closing
+      if (cameraScreen) cameraScreen.style.opacity = "0.5";
+
+      if (emotionInterval) {
+        clearInterval(emotionInterval);
+        emotionInterval = null;
+      }
+
+      if (cameraStream) {
+        cameraStream.getTracks().forEach(track => track.stop());
+      }
+
+      // Small delay so browser fully releases camera before UI switches
+      await new Promise(resolve => setTimeout(resolve, 100));
+
+      cameraStream = null;
+      video.srcObject = null;
+      cameraActive = false;
+
+      if (cameraScreen) cameraScreen.style.opacity = "1";
+      hideFaceBox();
+
+      // Show face-scan message
+      if (lastMentalState !== "-") {
+        hasFaceData = true;
+        setEmotionPill(chatCameraLabel, lastMentalState);
+        if (liveBadgeText) liveBadgeText.textContent = "Final: " + lastMentalState.charAt(0).toUpperCase() + lastMentalState.slice(1);
+        addMessage("system", "📷 Face scan complete — detected: " + lastMentalState);
+      }
+
+      cameraStatus.textContent = "Camera stopped";
+    }
+
+
+
+    /* =========================
+       OPEN CAMERA BUTTON
+    ========================= */
+    openCameraBtn.addEventListener("click", async () => {
+      showCamera();
+      await startCamera();
+    });
+
+
+    /* Close camera (back button) */
+    closeCameraBtn.addEventListener("click", () => {
+      stopCamera();
+      showChat();
+    });
+
+    /* =========================
+       FACE BOX FUNCTIONS
+    ========================= */
+
+    const faceBox = document.getElementById("faceBox");
+
+    function showFaceBox(x, y, w, h) {
+      faceBox.style.display = "block";
+      faceBox.style.left = x + "px";
+      faceBox.style.top  = y + "px";
+      faceBox.style.width  = w + "px";
+      faceBox.style.height = h + "px";
+      // Show current emotion as label on the box
+      const label = (currentEmotion && currentEmotion !== '-')
+        ? currentEmotion.toUpperCase()
+        : 'FACE';
+      faceBox.innerHTML = `<span style="
+        position:absolute;
+        top:-22px;
+        left:0;
+        background:#00ff88;
+        color:#000;
+        padding:2px 8px;
+        font-size:11px;
+        font-weight:700;
+        border-radius:4px;
+        letter-spacing:0.05em;
+        white-space:nowrap;
+      ">${label}</span>`;
+    }
+
+    function hideFaceBox() {
+      faceBox.style.display = "none";
+    }
+    /* =========================
+       CHAT SEND
+    ========================= */
+    function getChatHistory() {
+      const history = [];
+      document.querySelectorAll(".message.user, .message.bot").forEach(msg => {
+        history.push({
+          role: msg.classList.contains("user") ? "user" : "assistant",
+          content: msg.textContent
+        });
+      });
+      return history;
+    }
+
+    async function sendChatMessage(source = "text") {
+      const message = chatInput.value.trim();
+      if (!message) return;
+
+      // Collect history BEFORE adding the new message
+      const history = getChatHistory();
+
+      addMessage("user", message);
+      chatInput.value = "";
+
+      try {
+        const response = await fetch("/chat/", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "X-CSRFToken": getCookie("csrftoken")
+          },
+          body: JSON.stringify({
+            message: message,
+            emotion: currentEmotion,
+            source: source,
+            history: history
+          })
+        });
+
+        const data = await response.json();
+
+
+        if (data.response) {
+          addMessage("bot", data.response);
+
+          // Dynamic Insight Box
+          if (data.insight) {
+            insightBox.textContent = data.insight;
+          } else {
+            insightBox.textContent = "Continuing to monitor your reflected emotions for better insights.";
+          }
+
+          // Mental State Analysis
+          updateMentalAnalysis(data);
+        }
+
+        if (data.facial_emotion)
+          setEmotionPill(chatCameraLabel, data.facial_emotion);
+
+        if (data.source === "voice") {
+          if (data.text_emotion) {
+            hasVoiceData = true;
+            setEmotionPill(chatVoiceLabel, data.text_emotion);
+          }
+        } else {
+          if (data.text_emotion) {
+            hasTextData = true;
+            setEmotionPill(chatTextLabel, data.text_emotion);
+          }
+        }
+
+        updateDominantEmotion();
+
+      } catch (err) {
+        console.error(err);
+        addMessage("bot", "⚠️ Error contacting chatbot backend.");
+      }
+    }
+
+    function updateMentalAnalysis(data) {
+      const face   = data.facial_emotion || '-';
+      const src    = data.source || '';
+      const emo    = data.text_emotion  || '-';
+
+      // Show text vs voice in the correct row based on source
+      const textVal  = (src === 'voice') ? '-' : emo;
+      const voiceVal = (src === 'voice') ? emo  : '-';
+
+      let analysis = `<div style="display:flex;flex-direction:column;gap:8px;">`;
+
+      analysis += `<div style="display:flex;justify-content:space-between;align-items:center;">
+        <span style="color:#555;font-size:0.85rem;">Facial Analysis</span>
+        <strong style="text-transform:capitalize;">${face}</strong>
+      </div>`;
+
+      analysis += `<div style="display:flex;justify-content:space-between;align-items:center;">
+        <span style="color:#555;font-size:0.85rem;">Text Analysis</span>
+        <strong style="text-transform:capitalize;">${textVal}</strong>
+      </div>`;
+
+      analysis += `<div style="display:flex;justify-content:space-between;align-items:center;">
+        <span style="color:#555;font-size:0.85rem;">Voice Analysis</span>
+        <strong style="text-transform:capitalize;">${voiceVal}</strong>
+      </div>`;
+
+      analysis += `<hr style="border:none;border-top:1px solid #e8f5e9;margin:4px 0;">`;
+
+      let confidence = "-";
+      if (face !== '-' && face && emo !== '-' && emo) {
+        confidence = (face === emo) ? "High" : "Medium";
+      } else if (emo !== '-' && emo) {
+        confidence = "High";
+      } else if (face !== '-' && face) {
+        confidence = "Low";
+      }
+      analysis += `<div style="display:flex;justify-content:space-between;align-items:center;">
+        <span style="color:#555;font-size:0.85rem;">Confidence</span>
+        <strong>${confidence}</strong>
+      </div>`;
+
+      analysis += `</div>`;
+      mentalAnalysis.innerHTML = analysis;
+    }
+    sendBtn.addEventListener("click", sendChatMessage);
+
+    chatInput.addEventListener("keydown", (e) => {
+      if (e.key === "Enter") {
+        e.preventDefault();
+        sendChatMessage();
+      }
+    });
+
+    /* =========================
+       MIC SPEECH START / STOP
+    ========================= */
+
+    let recognition;
+    let isMicActive  = false;   // normal auto-mic toggle
+    let isProcessing = false;   // prevents duplicate sends
+    let speechBuffer = "";      // accumulates speech across interim results
+    let silenceTimer = null;    // fires send after pause
+
+    // Hard reset: destroys recognition object + rebuilds cleanly
+    function hardResetMic() {
+      if (recognition) {
+        try { recognition.abort(); } catch(e) {}
+        recognition = null;
+      }
+      isProcessing = false;
+      speechBuffer = "";
+      clearTimeout(silenceTimer);
+      setTimeout(() => { ensureRecognitionReady(); }, 200);
+    }
+
+    // ── Initialise recognition object once ──
+    function ensureRecognitionReady() {
+      if (recognition) return;
+
+      if (!('webkitSpeechRecognition' in window || 'SpeechRecognition' in window)) {
+        alert("Speech Recognition not supported in this browser.");
+        return;
+      }
+
+      const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+      recognition = new SpeechRecognition();
+
+      recognition.lang            = "en-IN";
+      recognition.continuous      = true;
+      recognition.interimResults  = true;
+      recognition.maxAlternatives = 1;
+
+      /* ── UNIFIED onresult ── */
+      recognition.onresult = (event) => {
+        let interim = "";
+        let final   = "";
+
+        for (let i = event.resultIndex; i < event.results.length; i++) {
+          const t = event.results[i][0].transcript;
+          if (event.results[i].isFinal) { final += t; }
+          else                           { interim += t; }
+        }
+
+        const transcriptBox  = document.getElementById('voiceTranscriptBox');
+        const transcriptText = document.getElementById('voiceTranscriptText');
+        if (transcriptBox && isMicActive) {
+          transcriptBox.style.display = 'block';
+        }
+
+        // ── NORMAL AUTO-MIC: silence-timer approach ──
+        if (isMicActive) {
+          if (final) { speechBuffer += " " + final; speechBuffer = speechBuffer.trim(); }
+          const live = (speechBuffer + " " + interim).trim();
+          if (transcriptText) transcriptText.textContent = live || 'Listening...';
+
+          if (final) {
+            clearTimeout(silenceTimer);
+            silenceTimer = setTimeout(() => {
+              const msg = speechBuffer.trim();
+              if (msg && !isProcessing) {
+                isProcessing = true;
+                chatInput.value = msg;
+                sendChatMessage("voice");
+                speechBuffer = "";
+                chatInput.value = "";
+                if (transcriptText) transcriptText.textContent = 'Listening...';
+                setTimeout(() => { isProcessing = false; }, 800);
+              }
+            }, 1200);
+          }
+        }
+      };
+
+      recognition.onerror = (event) => {
+        if (event.error === "not-allowed") {
+          isMicActive = false;
+          speechBtn.innerHTML = '<i class="fas fa-microphone"></i>';
+          speechBtn.classList.remove("red");
+          addMessage("system", "⚠️ Microphone access denied.");
+          return;
+        }
+        console.warn("Mic error:", event.error);
+      };
+
+      recognition.onend = () => {
+        // 🔥 GUARANTEE UI cleanup and abort restart if mic is OFF
+        if (!isMicActive) {
+          const transcriptBox = document.getElementById('voiceTranscriptBox');
+          if (transcriptBox) transcriptBox.style.display = "none";
+          return;
+        }
+
+        // 🔥 ONLY restart if active
+        if (isMicActive) {
+          setTimeout(() => { try { recognition.start(); } catch(e) {} }, 250);
+        }
+      };
+    }
+
+    /* ── Mic button: auto-mic toggle ── */
+    speechBtn.onclick = () => {
+
+      isMicActive = !isMicActive;
+
+      if (isMicActive) {
+        startMic();
+      } else {
+        stopMic();
+      }
+    };
+
+    function startMic() {
+      ensureRecognitionReady();
+      if (!recognition) return;
+      isMicActive = true;
+      try { recognition.start(); } catch(e) {}
+      speechBtn.innerHTML = '<i class="fas fa-stop"></i>';
+      speechBtn.classList.remove("dark");
+      speechBtn.classList.add("red");
+      addMessage("system", "🎤 Listening — speak to send a message.");
+    }
+
+    function stopMic() {
+      isMicActive = false;
+      isProcessing = false;
+
+      if (recognition) {
+        try { 
+          recognition.onend = null; // 🔥 CRITICAL guard against race condition
+          recognition.stop(); 
+        } catch(e) {}
+      }
+
+      speechBtn.innerHTML = '<i class="fas fa-microphone"></i>';
+      speechBtn.classList.remove("red");
+      speechBtn.classList.add("dark");
+      addMessage("system", "🛑 Mic turned off");
+      chatInput.value = "";
+
+      // UI FIX (always here)
+      const transcriptBox = document.getElementById('voiceTranscriptBox');
+      const transcriptText = document.getElementById('voiceTranscriptText');
+      if (transcriptBox) transcriptBox.style.display = "none";
+      if (transcriptText) transcriptText.textContent = "Listening...";
+    }
+
+
+
+
+
+    window.addEventListener("load", () => {
+      loadChatFromStorage();
+
+      // Ensure specific emotion structured update on load if needed
+      updateMentalAnalysis({
+        facial_emotion: chatCameraLabel.textContent,
+        text_emotion: chatTextLabel.textContent
+      });
+    });
+
+  </script>
+
+</body>
+
+</html>

@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mental Health Dashboard</title>
+
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <style>
+    :root {
+      --primary: #16a34a;
+      --primary-dark: #14532d;
+      --bg: linear-gradient(135deg, #eef2ff, #f0fdf4);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg);
+      min-height: 100vh;
+      color: #1f2937;
+    }
+
+    /* CONTAINER */
+    .container {
+      max-width: 1300px;
+      margin: 40px auto;
+      padding: 0 20px;
+    }
+
+    /* CARDS */
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 25px;
+      margin-bottom: 40px;
+    }
+
+    .card {
+      background: rgba(255, 255, 255, 0.85);
+      padding: 28px;
+      border-radius: 24px;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08);
+      transition: 0.3s;
+    }
+
+    .card:hover {
+      transform: translateY(-6px);
+    }
+
+    .card p {
+      font-size: 13px;
+      color: #6b7280;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .card h3 {
+      margin-top: 10px;
+      font-size: 32px;
+      font-weight: 800;
+      color: var(--primary-dark);
+    }
+
+    /* GRID */
+    .grid {
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      gap: 30px;
+    }
+
+    @media(max-width:1000px) {
+      .grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .section {
+      background: white;
+      padding: 30px;
+      border-radius: 24px;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08);
+    }
+
+    .section h3 {
+      margin-bottom: 20px;
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: #1f2937;
+    }
+
+    /* TABLE */
+    table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0 10px;
+    }
+
+    thead th {
+      font-size: 13px;
+      color: #6b7280;
+      text-align: left;
+      padding: 0 12px;
+    }
+
+    tbody tr {
+      background: #f9fafb;
+      border-radius: 14px;
+    }
+
+    tbody td {
+      padding: 12px;
+    }
+
+    canvas {
+      max-height: 350px;
+    }
+
+    /* CHART CARD (premium bar chart wrapper) */
+    .chart-card {
+      background: white;
+      padding: 28px 30px;
+      border-radius: 24px;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
+      margin-top: 40px;
+    }
+
+    .chart-card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 6px;
+    }
+
+    .chart-card-header h3 {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: #1f2937;
+    }
+
+    .chart-summary {
+      font-size: 13px;
+      color: #6b7280;
+      margin-bottom: 22px;
+    }
+
+    .chart-summary strong {
+      font-weight: 700;
+    }
+
+    /* WEEKLY CHART SECTION */
+    .weekly-section {
+      background: white;
+      padding: 30px;
+      border-radius: 24px;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08);
+      margin-top: 40px;
+    }
+
+    .weekly-section h3 {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: #1f2937;
+      margin-bottom: 6px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .weekly-section .subtitle {
+      font-size: 13px;
+      color: #6b7280;
+      margin-bottom: 24px;
+    }
+
+    /* CHART CONTAINER — fixed height so charts don't stretch */
+    .chart-container {
+      position: relative;
+      height: 280px;
+      width: 100%;
+    }
+
+    .legend-row {
+      display: flex;
+      gap: 20px;
+      flex-wrap: wrap;
+      margin-top: 16px;
+    }
+
+    .legend-dot {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 13px;
+      font-weight: 500;
+      color: #374151;
+    }
+
+    .dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+    }
+  </style>
+</head>
+
+<body>
+
+  {% include 'header.html' %}
+
+  <div class="container">
+    <!-- LIVE STAT CARDS -->
+    <div class="cards">
+      <div class="card">
+        <p>Total Scans</p>
+        <h3 id="total-scans">0</h3>
+      </div>
+      <div class="card">
+        <p>Dominant Mood</p>
+        <h3 id="top-mood">--</h3>
+      </div>
+      <div class="card">
+        <p>Last Detected</p>
+        <h3 id="last-seen">--</h3>
+      </div>
+    </div>
+
+    <!-- LIVE CHARTS GRID -->
+    <div class="grid">
+      <div class="section">
+        <h3>Mental Health Trend (Live)</h3>
+        <canvas id="lineChart"></canvas>
+      </div>
+
+      <div class="section">
+        <h3>Recent Detections</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>Time</th>
+              <th>Mental Health</th>
+            </tr>
+          </thead>
+          <tbody id="table-body">
+            <tr>
+              <td colspan="2">Waiting for data...</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- DISTRIBUTION BAR CHART (premium) -->
+    <div class="chart-card">
+      <div class="chart-card-header">
+        <h3>📊 Mental State Distribution</h3>
+      </div>
+      <p class="chart-summary" id="bar-summary">Most frequent state: <strong id="top-state">--</strong></p>
+      <div class="chart-container">
+        <canvas id="barChart"></canvas>
+      </div>
+    </div>
+
+    <!-- ✅ WEEKLY 7-DAY TREND (Django-powered) -->
+    <div class="weekly-section">
+      <h3>📈 Last 7 Days Trend</h3>
+      <p class="subtitle">Your mental state history over the past week — based on real session data</p>
+      <div class="chart-container">
+        <canvas id="weeklyChart"></canvas>
+      </div>
+      <div class="legend-row">
+        <div class="legend-dot">
+          <div class="dot" style="background:#16a34a"></div> Normal
+        </div>
+        <div class="legend-dot">
+          <div class="dot" style="background:#f59e0b"></div> Stress
+        </div>
+        <div class="legend-dot">
+          <div class="dot" style="background:#ef4444"></div> Anxiety
+        </div>
+        <div class="legend-dot">
+          <div class="dot" style="background:#8b5cf6"></div> Depressed
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    /* ─────────────────────────────────────────
+       LIVE CHARTS (polling /get-dashboard-data/)
+    ───────────────────────────────────────── */
+    const emotions = ["Depression", "Stress", "Anxiety", "Normal"];
+    const lineCtx = document.getElementById('lineChart');
+    const barCtx = document.getElementById('barChart');
+
+    let lineChart = new Chart(lineCtx, {
+      type: 'line',
+      data: {
+        labels: [], datasets: [{
+          label: 'Analysis Over Time',
+          data: [],
+          borderColor: '#16a34a',
+          backgroundColor: 'rgba(34,197,94,0.2)',
+          fill: true,
+          tension: 0.4
+        }]
+      },
+      options: {
+        responsive: true,
+        scales: {
+          y: { type: 'category', labels: emotions }
+        }
+      }
+    });
+
+    // COLOR MAP — consistent across app
+    const STATE_COLORS = {
+      normal: { bg: '#22c55e', hover: '#4ade80' },
+      stress: { bg: '#f59e0b', hover: '#fbbf24' },
+      anxiety: { bg: '#ef4444', hover: '#f87171' },
+      depressed: { bg: '#8b5cf6', hover: '#a78bfa' },
+    };
+
+    function getBarColor(label, key) {
+      const state = (label || '').toLowerCase();
+      return STATE_COLORS[state] ? STATE_COLORS[state][key] : '#94a3b8';
+    }
+
+    let barChart = new Chart(barCtx, {
+      type: 'bar',
+      data: {
+        labels: [], datasets: [{
+          label: 'Mental State',
+          data: [],
+          backgroundColor: [],
+          hoverBackgroundColor: [],
+          borderRadius: 12,
+          barThickness: 60,
+          maxBarThickness: 72,
+          categoryPercentage: 0.8,
+          barPercentage: 0.9,
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        animation: { duration: 1200, easing: 'easeOutQuart' },
+        plugins: {
+          legend: { display: false },
+          tooltip: {
+            backgroundColor: '#111827',
+            titleColor: '#f9fafb',
+            bodyColor: '#d1d5db',
+            padding: 12,
+            cornerRadius: 10,
+            callbacks: {
+              label: ctx => ` ${ctx.parsed.y} scan(s)`
+            }
+          }
+        },
+        scales: {
+          x: {
+            grid: { display: false },
+            ticks: { color: '#6b7280', font: { size: 12, weight: '500' } }
+          },
+          y: {
+            beginAtZero: true,
+            grid: { color: 'rgba(0,0,0,0.05)' },
+            ticks: { color: '#9ca3af', font: { size: 11 }, stepSize: 1, precision: 0 }
+          }
+        }
+      }
+    });
+
+    async function fetchDashboardData() {
+      try {
+        const response = await fetch('/get-dashboard-data/');
+        const data = await response.json();
+
+        document.getElementById('total-scans').innerText = data.total;
+        if (data.recent.length > 0) document.getElementById('last-seen').innerText = data.recent[0].emotion;
+        if (data.breakdown.length > 0) {
+          // Pick actual max — sort by count to be safe
+          const sorted = [...data.breakdown].sort((a, b) => b.count - a.count);
+          const top = sorted[0].emotion;
+          document.getElementById('top-mood').innerText = top;
+          const topEl = document.getElementById('top-state');
+          if (topEl) {
+            topEl.textContent = top.charAt(0).toUpperCase() + top.slice(1);
+            topEl.style.color = (STATE_COLORS[top.toLowerCase()] || {}).bg || '#16a34a';
+          }
+        }
+
+        // Bar chart — apply per-state colors
+        const labels = data.breakdown.map(i => i.emotion);
+        const counts = data.breakdown.map(i => i.count);
+        barChart.data.labels = labels;
+        barChart.data.datasets[0].data = counts;
+        barChart.data.datasets[0].backgroundColor = labels.map(l => getBarColor(l, 'bg'));
+        barChart.data.datasets[0].hoverBackgroundColor = labels.map(l => getBarColor(l, 'hover'));
+        barChart.update();
+
+        lineChart.data.labels = data.recent.map(i => new Date(i.timestamp).toLocaleTimeString());
+        lineChart.data.datasets[0].data = data.recent.map(i => i.emotion);
+        lineChart.update();
+
+        const tbody = document.getElementById('table-body');
+        tbody.innerHTML = '';
+        data.recent.forEach(log => {
+          const stateColor = (STATE_COLORS[log.emotion.toLowerCase()] || {}).bg || '#6b7280';
+          tbody.innerHTML += `<tr>
+        <td>${new Date(log.timestamp).toLocaleTimeString()}</td>
+        <td><span style="color:${stateColor};font-weight:600;">${log.emotion}</span></td>
+      </tr>`;
+        });
+      } catch (e) { /* silent fail */ }
+    }
+
+    setInterval(fetchDashboardData, 2000);
+    fetchDashboardData();
+
+
+    /* ─────────────────────────────────────────
+       WEEKLY 7-DAY TREND CHART (Django context)
+    ───────────────────────────────────────── */
+    const weeklyLabels = {{ weekly_labels| safe }};
+    const weeklyNormal = {{ weekly_normal| safe }};
+    const weeklyStress = {{ weekly_stress| safe }};
+    const weeklyAnxiety = {{ weekly_anxiety| safe }};
+    const weeklyDepressed = {{ weekly_depressed| safe }};
+
+    new Chart(document.getElementById('weeklyChart'), {
+      type: 'line',
+      data: {
+        labels: weeklyLabels,
+        datasets: [
+          {
+            label: 'Normal',
+            data: weeklyNormal,
+            borderColor: '#16a34a',
+            backgroundColor: 'rgba(22,163,74,0.1)',
+            borderWidth: 2.5,
+            pointRadius: 5,
+            pointHoverRadius: 7,
+            tension: 0.4,
+            fill: false
+          },
+          {
+            label: 'Stress',
+            data: weeklyStress,
+            borderColor: '#f59e0b',
+            backgroundColor: 'rgba(245,158,11,0.1)',
+            borderWidth: 2.5,
+            pointRadius: 5,
+            pointHoverRadius: 7,
+            tension: 0.4,
+            fill: false
+          },
+          {
+            label: 'Anxiety',
+            data: weeklyAnxiety,
+            borderColor: '#ef4444',
+            backgroundColor: 'rgba(239,68,68,0.1)',
+            borderWidth: 2.5,
+            pointRadius: 5,
+            pointHoverRadius: 7,
+            tension: 0.4,
+            fill: false
+          },
+          {
+            label: 'Depressed',
+            data: weeklyDepressed,
+            borderColor: '#8b5cf6',
+            backgroundColor: 'rgba(139,92,246,0.1)',
+            borderWidth: 2.5,
+            pointRadius: 5,
+            pointHoverRadius: 7,
+            tension: 0.4,
+            fill: false
+          }
+        ]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        interaction: { mode: 'index', intersect: false },
+        plugins: {
+          legend: { display: false },
+          tooltip: {
+            callbacks: {
+              label: ctx => ` ${ctx.dataset.label}: ${ctx.parsed.y} scan(s)`
+            }
+          }
+        },
+        scales: {
+          x: {
+            grid: { color: 'rgba(0,0,0,0.04)' },
+            ticks: { font: { size: 12 } }
+          },
+          y: {
+            beginAtZero: true,
+            ticks: { stepSize: 1, precision: 0 },
+            grid: { color: 'rgba(0,0,0,0.05)' },
+            title: { display: true, text: 'Scans', font: { size: 12 } }
+          }
+        }
+      }
+    });
+  </script>
+</body>
+
+</html>

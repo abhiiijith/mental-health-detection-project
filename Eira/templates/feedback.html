@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mental Health Detection • Feedback</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+
+  <style>
+    :root {
+      --green: #22c55e;
+      --green-dark: #16a34a;
+      --green-deeper: #14532d;
+      --muted: #6b7280;
+      --border: #d1fae5;
+      --text: #1f2937;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      min-height: 100vh;
+      background: linear-gradient(135deg, #e8f5e9 0%, #f4f7f6 60%, #eef2ff 100%);
+      color: var(--text);
+    }
+
+    /* ── SPLIT LAYOUT ── */
+    .feedback-wrapper {
+      display: flex;
+      min-height: calc(100vh - 70px); /* below header */
+      gap: 0;
+    }
+
+    /* LEFT PANEL */
+    .feedback-info {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 60px 56px;
+      background: linear-gradient(160deg, #dcfce7 0%, #bbf7d0 100%);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .feedback-info::before {
+      content: '';
+      position: absolute;
+      width: 300px; height: 300px;
+      border-radius: 50%;
+      background: rgba(34,197,94,0.12);
+      bottom: -60px; right: -80px;
+    }
+
+    .feedback-info .icon-badge {
+      width: 64px; height: 64px;
+      background: white;
+      border-radius: 18px;
+      display: flex; align-items: center; justify-content: center;
+      margin-bottom: 28px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+    }
+
+    .feedback-info .icon-badge i {
+      font-size: 1.8rem;
+      color: var(--green-dark);
+    }
+
+    .feedback-info h2 {
+      font-size: 2rem;
+      font-weight: 800;
+      color: var(--green-deeper);
+      line-height: 1.2;
+      margin-bottom: 16px;
+    }
+
+    .feedback-info > p {
+      color: #374151;
+      font-size: 0.95rem;
+      line-height: 1.7;
+      margin-bottom: 32px;
+      max-width: 360px;
+    }
+
+    .benefit-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .benefit-list li {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 0.9rem;
+      font-weight: 500;
+      color: var(--green-deeper);
+    }
+
+    .benefit-list li .check {
+      width: 28px; height: 28px;
+      border-radius: 50%;
+      background: white;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+    }
+
+    .benefit-list li .check i {
+      font-size: 0.75rem;
+      color: var(--green-dark);
+    }
+
+    /* RIGHT PANEL */
+    .feedback-card {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 60px 56px;
+    }
+
+    .feedback-card h3 {
+      font-size: 1.5rem;
+      font-weight: 800;
+      color: var(--text);
+      margin-bottom: 6px;
+    }
+
+    .feedback-card .card-subtitle {
+      font-size: 0.88rem;
+      color: var(--muted);
+      margin-bottom: 32px;
+    }
+
+    /* USER CHIP */
+    .user-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: #f0fdf4;
+      border: 1px solid var(--border);
+      border-radius: 50px;
+      padding: 6px 14px 6px 8px;
+      margin-bottom: 28px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--green-deeper);
+    }
+
+    .user-chip .avatar {
+      width: 28px; height: 28px;
+      background: var(--green-dark);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      color: white;
+      font-size: 0.75rem;
+      font-weight: 700;
+    }
+
+    /* FORM */
+    .input-group {
+      margin-bottom: 20px;
+    }
+
+    .input-group label {
+      display: block;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 8px;
+    }
+
+    textarea {
+      width: 100%;
+      height: 140px;
+      border-radius: 14px;
+      border: 1.5px solid #e5e7eb;
+      padding: 14px 16px;
+      font-family: 'Inter', sans-serif;
+      font-size: 0.9rem;
+      color: var(--text);
+      background: white;
+      resize: none;
+      transition: 0.25s;
+      outline: none;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+    }
+
+    textarea:focus {
+      border-color: var(--green);
+      box-shadow: 0 0 0 3px rgba(34,197,94,0.12);
+    }
+
+    textarea::placeholder {
+      color: #9ca3af;
+    }
+
+    .submit-btn {
+      width: 100%;
+      padding: 14px;
+      border: none;
+      border-radius: 14px;
+      background: linear-gradient(135deg, var(--green) 0%, var(--green-dark) 100%);
+      color: white;
+      font-size: 0.95rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: 0.3s;
+      box-shadow: 0 4px 16px rgba(22,163,74,0.3);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .submit-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(22,163,74,0.35);
+    }
+
+    .submit-btn:active {
+      transform: translateY(0);
+    }
+
+    .back-link {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      margin-top: 18px;
+      text-align: center;
+      font-size: 0.88rem;
+      font-weight: 500;
+      color: var(--muted);
+      text-decoration: none;
+      transition: 0.2s;
+    }
+
+    .back-link:hover {
+      color: var(--green-dark);
+    }
+
+    /* RESPONSIVE */
+    @media (max-width: 768px) {
+      .feedback-wrapper { flex-direction: column; }
+      .feedback-info { padding: 40px 28px; }
+      .feedback-card { padding: 40px 28px; }
+    }
+  </style>
+</head>
+
+<body>
+
+  {% include 'header.html' %}
+
+  <div class="feedback-wrapper">
+
+    <!-- ── LEFT: INFO PANEL ── -->
+    <div class="feedback-info">
+      <div class="icon-badge">
+        <i class="fas fa-comment-dots"></i>
+      </div>
+
+      <h2>We value your feedback</h2>
+      <p>
+        Help us improve your mental health experience.
+        Your thoughts directly shape how this system grows.
+      </p>
+
+      <ul class="benefit-list">
+        <li>
+          <div class="check"><i class="fas fa-check"></i></div>
+          Improve AI detection accuracy
+        </li>
+        <li>
+          <div class="check"><i class="fas fa-check"></i></div>
+          Better overall user experience
+        </li>
+        <li>
+          <div class="check"><i class="fas fa-check"></i></div>
+          More helpful emotional insights
+        </li>
+      </ul>
+    </div>
+
+    <!-- ── RIGHT: FORM PANEL ── -->
+    <div class="feedback-card">
+      <h3>Send Feedback</h3>
+      <p class="card-subtitle">Your message goes directly to our team</p>
+
+      <!-- Logged-in user chip -->
+      <div class="user-chip">
+        <div class="avatar">{{ client.name|first|upper }}</div>
+        {{ client.name }}
+      </div>
+
+      <form method="POST" action="/feedback/">
+        {% csrf_token %}
+
+        <!-- Hidden — auto-filled from session -->
+        <input type="hidden" name="user" value="{{ client.name }}">
+
+        <div class="input-group">
+          <label for="message">Your Message</label>
+          <textarea
+            id="message"
+            name="message"
+            placeholder="Tell us what you liked, what can be improved, or any suggestions..."
+            required
+          ></textarea>
+        </div>
+
+        <button type="submit" class="submit-btn">
+          <i class="fas fa-paper-plane"></i>
+          Submit Feedback
+        </button>
+      </form>
+
+      <a href="/home/" class="back-link">
+        <i class="fas fa-arrow-left" style="font-size:0.8rem;"></i>
+        Back to Home
+      </a>
+    </div>
+
+  </div>
+
+</body>
+</html>

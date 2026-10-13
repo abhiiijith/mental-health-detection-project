@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Login</title>
+  <!-- <style>
+    :root { --bg:#0f172a; --card:#111827; --text:#e5e7eb; --muted:#9ca3af; --primary:#3b82f6; --error:#ef4444; }
+    * { box-sizing:border-box; }
+    body {
+      margin:0; font-family:system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Cantarell, Noto Sans, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
+      background:linear-gradient(135deg,#0b1020,#0f172a 40%,#111827); color:var(--text); min-height:100dvh;
+      display:grid; place-items:center; padding:24px;
+    }
+    .card {
+      width:100%; max-width:380px; background:rgba(17,24,39,0.8); border:1px solid rgba(148,163,184,0.15);
+      border-radius:16px; padding:28px; backdrop-filter:blur(8px);
+      box-shadow:0 10px 30px rgba(0,0,0,0.5);
+    }
+    h1 { margin:0 0 6px; font-size:24px; }
+    p.subtitle { margin:0 0 22px; color:var(--muted); font-size:14px; }
+    label { display:block; font-size:13px; margin:14px 0 6px; color:#cbd5e1; }
+    .input {
+      width:100%; padding:10px 12px; border:1px solid rgba(148,163,184,0.2);
+      border-radius:10px; background:#0b1020; color:var(--text); outline:none; transition:0.15s border;
+    }
+    .input:focus { border-color:var(--primary); }
+    .row { display:flex; align-items:center; justify-content:space-between; margin:12px 0 6px; }
+    .checkbox { display:flex; align-items:center; gap:8px; font-size:13px; color:#cbd5e1; }
+    a.link { color:var(--primary); text-decoration:none; font-size:13px; }
+    a.link:hover { text-decoration:underline; }
+    .btn {
+      width:100%; margin-top:14px; padding:10px 14px; border:none; border-radius:10px;
+      background:var(--primary); color:white; font-weight:600; cursor:pointer; transition:0.15s opacity;
+    }
+    .btn:hover { opacity:0.95; }
+    .error { margin-top:10px; color:var(--error); font-size:13px; min-height:16px; }
+    .oauth { margin-top:16px; display:flex; gap:10px; }
+    .oauth button {
+      flex:1; background:#0b1020; color:#cbd5e1; border:1px solid rgba(148,163,184,0.2);
+      padding:8px 10px; border-radius:10px; cursor:pointer;
+    }
+    .footer { margin-top:18px; font-size:13px; color:#cbd5e1; text-align:center; }
+  </style> -->
+
+  <style>
+    :root { 
+        --bg: #F9FAF5;
+        --card: #ffffff;
+        --text: #2e2e2e;
+        --muted: #6b6b6b;
+        --primary: #66BB6A;
+        --primarydark: #2E7D32;
+        --error: #ef4444;
+    }
+
+    * { 
+        box-sizing: border-box;
+    }
+
+    body {
+        margin: 0;
+        font-family: 'Inter', sans-serif;
+        background-color: var(--bg);
+        min-height: 100dvh;
+        display: grid;
+        place-items: center;
+        padding: 24px;
+    }
+
+    .card {
+        width: 100%;
+        max-width: 380px;
+        background: rgba(255, 255, 255, 0.95);
+        border: 1px solid rgba(102, 187, 106, 0.25);
+        border-radius: 16px;
+        padding: 28px;
+        backdrop-filter: blur(6px);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+        animation: fadeIn 0.7s ease-out forwards;
+    }
+
+    h1 {
+        margin: 0 0 6px;
+        font-size: 24px;
+        background: linear-gradient(45deg, var(--primarydark), var(--primary));
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+
+    p.subtitle {
+        margin: 0 0 22px;
+        color: var(--muted);
+        font-size: 14px;
+    }
+
+    label {
+        display: block;
+        font-size: 13px;
+        margin: 14px 0 6px;
+        color: var(--primarydark);
+    }
+
+    .input {
+        width: 100%;
+        padding: 10px 12px;
+        border: 1px solid rgba(102, 187, 106, 0.25);
+        border-radius: 10px;
+        background: #ffffff;
+        color: var(--text);
+        outline: none;
+        transition: 0.2s border;
+    }
+
+    .input:focus {
+        border-color: var(--primary);
+    }
+
+    .row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin: 12px 0 6px;
+    }
+
+    .checkbox {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 13px;
+        color: var(--primarydark);
+    }
+
+    a.link {
+        color: var(--primarydark);
+        text-decoration: none;
+        font-size: 13px;
+        transition: 0.2s;
+    }
+
+    a.link:hover {
+        text-decoration: underline;
+    }
+
+    .btn {
+        width: 100%;
+        margin-top: 14px;
+        padding: 10px 14px;
+        border: none;
+        border-radius: 10px;
+        background: var(--primary);
+        color: white;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 6px rgba(102, 187, 106, 0.25);
+    }
+
+    .btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 12px rgba(46, 125, 50, 0.2);
+    }
+
+    .error {
+        margin-top: 10px;
+        color: var(--error);
+        font-size: 13px;
+        min-height: 16px;
+    }
+
+    .oauth {
+        margin-top: 16px;
+        display: flex;
+        gap: 10px;
+    }
+
+    .oauth button {
+        flex: 1;
+        background: #ffffff;
+        color: var(--primarydark);
+        border: 1px solid rgba(102, 187, 106, 0.25);
+        padding: 8px 10px;
+        border-radius: 10px;
+        cursor: pointer;
+        transition: 0.3s;
+    }
+
+    .oauth button:hover {
+        transform: scale(1.05);
+        border-color: var(--primary);
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.06);
+    }
+
+    .footer {
+        margin-top: 18px;
+        font-size: 13px;
+        color: var(--muted);
+        text-align: center;
+    }
+
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+</style>
+
+</head>
+<body>
+  <form class="card" id="loginForm" method="POST">
+   {% csrf_token %}
+    <h1>Admin Login</h1>
+    <p class="subtitle">Login in to continue</p>
+
+    <label for="username">Username</label>
+    <input class="input" id="username" name="username" type="text" placeholder="enter username" required />
+
+    <label for="password">Password</label>
+    <input class="input" id="password" name="password" type="password" placeholder="password" required />
+
+    {% comment %} <div class="row">
+      <label class="checkbox">
+        <input type="checkbox" id="remember" /> Remember me
+      </label>
+      <a class="link" href="#">Forgot password?</a>
+    </div> {% endcomment %}
+
+    <button class="btn" type="submit">Sign in</button>
+    <div class="error" id="error"></div>
+
+    <!-- <div class="oauth">
+      <button type="button" onclick="alert('OAuth not wired up')">Google</button>
+      <button type="button" onclick="alert('OAuth not wired up')">GitHub</button>
+    </div> -->
+
+    {% comment %} <div class="footer">
+      Don’t have an account? <a class="link" href="{% url 'register' %}">Create one</a>
+    </div> {% endcomment %}
+  </form>
+</body>
+</html>
+  

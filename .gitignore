@@ -1,0 +1,16 @@
+.env
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+env/
+db.sqlite3
+*.log
+.vscode/
+media/
+*.h5
+*.hdf5
+*.pt
+*.pth
+*.pkl
+*.joblib

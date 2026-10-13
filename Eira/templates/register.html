@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Register • Mental Health</title>
+
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Font -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- Font Awesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: #F9FAF5;
+    }
+
+    .gradient-text {
+      background: -webkit-linear-gradient(45deg, #2E7D32, #66BB6A);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .soft-card {
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08);
+    }
+
+    .error-text {
+      color: #dc2626;
+      font-size: 0.875rem;
+      margin-top: 0.25rem;
+    }
+
+    .success-text {
+      color: #15803d;
+      font-size: 0.875rem;
+      margin-top: 0.25rem;
+    }
+  </style>
+</head>
+
+<body class="min-h-screen flex items-center justify-center px-4">
+
+  <div class="w-full max-w-4xl bg-white rounded-3xl soft-card overflow-hidden grid md:grid-cols-2">
+
+    <!-- Left Section -->
+    <div class="hidden md:flex flex-col justify-center p-10 bg-gradient-to-br from-green-100 to-green-50">
+      <h1 class="text-4xl font-bold mb-4">
+        Welcome to <span class="gradient-text">Mental Health Detection</span>
+      </h1>
+      <p class="text-gray-600 leading-relaxed">
+        A calm, private space to understand stress, anxiety and emotional well-being.
+        Your journey to balance starts here 🌿
+      </p>
+    </div>
+
+    <!-- Right Section (Form) -->
+    <div class="p-8 md:p-10">
+      <h2 class="text-2xl font-bold text-gray-800 mb-1">Create Account</h2>
+      <p class="text-sm text-gray-500 mb-6">It only takes a minute</p>
+
+      <form method="POST" class="space-y-4" id="registerForm">
+        {% csrf_token %}
+
+        <!-- Name -->
+        <div>
+          <label class="text-sm text-gray-600">Full Name</label>
+          <input type="text" name="name" id="name" required
+            class="w-full mt-1 px-4 py-3 rounded-xl border border-green-200 focus:ring-2 focus:ring-green-300 focus:outline-none"
+            placeholder="Enter your name">
+          <p id="nameError" class="error-text hidden"></p>
+        </div>
+
+        <!-- Email -->
+        <div>
+          <label class="text-sm text-gray-600">Email</label>
+          <input type="email" name="email" id="email" required
+            class="w-full mt-1 px-4 py-3 rounded-xl border border-green-200 focus:ring-2 focus:ring-green-300 focus:outline-none"
+            placeholder="you@example.com">
+          <p id="emailError" class="error-text hidden"></p>
+        </div>
+
+        <!-- Password -->
+        <div>
+          <label class="text-sm text-gray-600">Password</label>
+          <div class="relative mt-1">
+            <input type="password" name="password" id="password" minlength="6" required
+              class="w-full px-4 py-3 rounded-xl border border-green-200 focus:ring-2 focus:ring-green-300 focus:outline-none pr-12"
+              placeholder="Minimum 6 characters">
+            <button type="button" onclick="togglePassword('password','eye1')"
+              class="absolute right-4 top-1/2 -translate-y-1/2 text-gray-500 hover:text-green-700">
+              <i id="eye1" class="fa-solid fa-eye"></i>
+            </button>
+          </div>
+          <p id="passError" class="error-text hidden"></p>
+        </div>
+
+        <!-- Confirm Password -->
+        <div>
+          <label class="text-sm text-gray-600">Confirm Password</label>
+          <div class="relative mt-1">
+            <input type="password" name="confirm_password" id="confirm_password" minlength="6" required
+              class="w-full px-4 py-3 rounded-xl border border-green-200 focus:ring-2 focus:ring-green-300 focus:outline-none pr-12"
+              placeholder="Re-enter your password">
+            <button type="button" onclick="togglePassword('confirm_password','eye2')"
+              class="absolute right-4 top-1/2 -translate-y-1/2 text-gray-500 hover:text-green-700">
+              <i id="eye2" class="fa-solid fa-eye"></i>
+            </button>
+          </div>
+          <p id="confirmError" class="error-text hidden"></p>
+        </div>
+
+        <!-- Gender -->
+        <div>
+          <label class="text-sm text-gray-600 block mb-2">Gender</label>
+          <div class="flex gap-3">
+            <label class="flex-1 border rounded-xl px-4 py-2 text-center cursor-pointer hover:border-green-400">
+              <input type="radio" name="gender" value="MALE" class="hidden peer" required>
+              <span class="peer-checked:text-green-700 peer-checked:font-semibold">Male</span>
+            </label>
+
+            <label class="flex-1 border rounded-xl px-4 py-2 text-center cursor-pointer hover:border-green-400">
+              <input type="radio" name="gender" value="FEMALE" class="hidden peer" required>
+              <span class="peer-checked:text-green-700 peer-checked:font-semibold">Female</span>
+            </label>
+
+            <label class="flex-1 border rounded-xl px-4 py-2 text-center cursor-pointer hover:border-green-400">
+              <input type="radio" name="gender" value="OTHER" class="hidden peer" required>
+              <span class="peer-checked:text-green-700 peer-checked:font-semibold">Other</span>
+            </label>
+          </div>
+          <p id="genderError" class="error-text hidden"></p>
+        </div>
+
+        <!-- Location -->
+        <div>
+          <label class="text-sm text-gray-600">Location</label>
+          <select name="location" id="location" required
+            class="w-full mt-1 px-4 py-3 rounded-xl border border-green-200 focus:ring-2 focus:ring-green-300 focus:outline-none">
+            <option value="">Select your district</option>
+            <option>Kasargod</option>
+            <option>Kannur</option>
+            <option>Kozhikode</option>
+            <option>Malappuram</option>
+            <option>Palakkad</option>
+            <option>Thrissur</option>
+            <option>Ernakulam</option>
+            <option>Idukki</option>
+            <option>Kottayam</option>
+            <option>Alappuzha</option>
+            <option>Pathanamthitta</option>
+            <option>Kollam</option>
+            <option>Thiruvananthapuram</option>
+          </select>
+          <p id="locationError" class="error-text hidden"></p>
+        </div>
+
+        <!-- Button -->
+        <button type="submit"
+          class="w-full mt-4 bg-green-600 hover:bg-green-700 text-white py-3 rounded-xl font-semibold transition">
+          Create Account
+        </button>
+
+        <!-- Footer -->
+        <p class="text-center text-sm text-gray-500 mt-4">
+          Already have an account?
+          <a href="{% url 'login' %}" class="text-green-700 font-semibold hover:underline">Login</a>
+        </p>
+      </form>
+    </div>
+
+  </div>
+
+  <!-- JS VALIDATION -->
+  <script>
+    function togglePassword(inputId, eyeId) {
+      const input = document.getElementById(inputId);
+      const eye = document.getElementById(eyeId);
+
+      if (input.type === "password") {
+        input.type = "text";
+        eye.classList.remove("fa-eye");
+        eye.classList.add("fa-eye-slash");
+      } else {
+        input.type = "password";
+        eye.classList.remove("fa-eye-slash");
+        eye.classList.add("fa-eye");
+      }
+    }
+
+    const form = document.getElementById("registerForm");
+
+    const nameInput = document.getElementById("name");
+    const emailInput = document.getElementById("email");
+    const passInput = document.getElementById("password");
+    const confirmInput = document.getElementById("confirm_password");
+    const locationInput = document.getElementById("location");
+
+    function showError(id, msg) {
+      const el = document.getElementById(id);
+      el.innerText = msg;
+      el.classList.remove("hidden");
+    }
+
+    function hideError(id) {
+      const el = document.getElementById(id);
+      el.innerText = "";
+      el.classList.add("hidden");
+    }
+
+    // Name validation (Only letters + space, min 3)
+    function validateName() {
+      const name = nameInput.value.trim();
+      const regex = /^[A-Za-z ]{3,}$/;
+
+      if (!regex.test(name)) {
+        showError("nameError", "Name must be at least 3 letters (only alphabets allowed).");
+        return false;
+      }
+      hideError("nameError");
+      return true;
+    }
+
+    // Email validation
+    function validateEmail() {
+      const email = emailInput.value.trim();
+      const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+      if (!regex.test(email)) {
+        showError("emailError", "Enter a valid email address.");
+        return false;
+      }
+      hideError("emailError");
+      return true;
+    }
+
+    // Password validation (strong)
+    function validatePassword() {
+      const pass = passInput.value;
+
+      const strongRegex = /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{6,}$/;
+
+      if (!strongRegex.test(pass)) {
+        showError("passError", "Password must contain A-Z, a-z, number, and special character.");
+        return false;
+      }
+      hideError("passError");
+      return true;
+    }
+
+    // Confirm password validation
+    function validateConfirm() {
+      const pass = passInput.value;
+      const confirm = confirmInput.value;
+
+      if (confirm !== pass) {
+        showError("confirmError", "Passwords do not match.");
+        return false;
+      }
+      hideError("confirmError");
+      return true;
+    }
+
+    // Gender validation
+    function validateGender() {
+      const gender = document.querySelector("input[name='gender']:checked");
+      if (!gender) {
+        showError("genderError", "Please select gender.");
+        return false;
+      }
+      hideError("genderError");
+      return true;
+    }
+
+    // Location validation
+    function validateLocation() {
+      if (locationInput.value.trim() === "") {
+        showError("locationError", "Please select your district.");
+        return false;
+      }
+      hideError("locationError");
+      return true;
+    }
+
+    // Live validations
+    nameInput.addEventListener("input", validateName);
+    emailInput.addEventListener("input", validateEmail);
+    passInput.addEventListener("input", () => {
+      validatePassword();
+      validateConfirm();
+    });
+    confirmInput.addEventListener("input", validateConfirm);
+    locationInput.addEventListener("change", validateLocation);
+
+    // Submit validation
+    form.addEventListener("submit", function (e) {
+      const ok =
+        validateName() &&
+        validateEmail() &&
+        validatePassword() &&
+        validateConfirm() &&
+        validateGender() &&
+        validateLocation();
+
+      if (!ok) {
+        e.preventDefault();
+      }
+    });
+  </script>
+
+</body>
+
+</html>

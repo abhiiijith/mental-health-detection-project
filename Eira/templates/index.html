@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mental Health WebApp </title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #F9FAF5; /* A very light, soft green */
+        }
+        .hero-bg {
+            background: linear-gradient(135deg, rgba(210, 243, 220, 0.6) 0%, rgba(230, 245, 235, 0.6) 100%);
+        }
+        .gradient-text {
+            background: -webkit-linear-gradient(45deg, #2E7D32, #66BB6A);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .cta-button {
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .cta-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(46, 125, 50, 0.2);
+        }
+        .feature-card {
+            transition: all 0.3s ease;
+            border: 1px solid transparent;
+        }
+        .feature-card:hover {
+            transform: scale(1.05);
+            border-color: #66BB6A;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+        }
+        /* Custom animation for fade-in effect */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .fade-in {
+            animation: fadeIn 0.8s ease-out forwards;
+        }
+    </style>
+</head>
+<body class="text-gray-800">
+
+    <!-- Header -->
+    <header class="bg-white/80 backdrop-blur-md sticky top-0 z-50 shadow-sm">
+        <div class="container mx-auto px-6 py-4 flex justify-between items-center">
+            <a href="#" class="flex items-center space-x-2">
+                <i class="fas fa-brain" style="font-size: 1.8rem; color: #2e8b57;"></i>
+                <span class="text-2xl font-bold" style="color: #2e8b57;">Mental Health Detection</span>
+            </a>
+            <nav class="hidden md:flex items-center space-x-8">
+                <a href="#how-it-works" class="text-gray-600 hover:text-green-700 transition">How it works</a>
+                <a href="#about" class="text-gray-600 hover:text-green-700 transition">About</a>
+                <a href="{% url 'adminlogin' %}" class="text-gray-600 hover:text-green-700 transition">Admin</a>
+                <a href="{% url 'login' %}" class="bg-green-600 text-white px-5 py-2 rounded-full cta-button">Get Started</a>
+            </nav>
+            <button class="md:hidden text-gray-600">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" />
+                </svg>
+            </button>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main>
+<!-- Hero Section -->
+        <section class="hero-bg py-20 md:py-32">
+            <div class="container mx-auto px-6 text-center">
+                <div class="max-w-3xl mx-auto fade-in">
+                    <h1 class="text-4xl md:text-6xl font-bold text-gray-800 leading-tight mb-4">
+                        Discover Your Inner Peace with <span class="gradient-text">AI-Powered Insight</span>
+                    </h1>
+                    <p class="text-lg md:text-xl text-gray-600 mb-8">
+        <!-- Hero Section -->
+                        Our AI analyzes subtle facial expressions to provide personalized mental wellness guidance, connecting you with the right path to a more mindful you.
+                    </p>
+                    <div class="flex justify-center items-center space-x-4">
+                        <a href="{% url 'register' %}" class="bg-green-600 text-white px-8 py-4 rounded-full cta-button text-lg font-semibold">Start Your Journey</a>
+                        <a href="#" class="bg-white text-green-600 px-8 py-4 rounded-full cta-button text-lg font-semibold border border-green-200">Learn More</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- How It Works Section -->
+        <section id="how-it-works" class="py-20 bg-green-25">
+            <div class="container mx-auto px-6">
+                <div class="text-center mb-16">
+                    <h2 class="text-3xl md:text-4xl font-bold">A Clear Path to a Calmer Mind</h2>
+                    <p class="text-gray-600 mt-4 max-w-2xl mx-auto">Our process is simple, secure, and designed with your well-being at its core.</p>
+                </div>
+                <div class="grid md:grid-cols-3 gap-12 text-center">
+                    <!-- Step 1 -->
+                    <div class="fade-in" style="animation-delay: 0.2s;">
+                        <div class="bg-green-100/50 p-6 rounded-full inline-block mb-4">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" />
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" />
+                            </svg>
+                        </div>
+             
+            
+                    <h3 class="text-xl font-semibold mb-2">1. Capture Your Moments</h3>
+                    <p class="text-gray-500">Take photos or record moments to reflect on your daily emotions and progress.</p>
+                </div>
+
+                <!-- Step 2 -->
+                <div class="fade-in flex-1 min-w-[200px] text-center" style="animation-delay: 0.4s;">
+                    <div class="bg-green-100/50 p-6 rounded-full inline-block mb-4">
+                        <!-- Voice Icon -->
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 1v22m0 0c4-1 6-4 6-10s-2-9-6-10-6 4-6 10 2 9 6 10z" />
+                        </svg>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-2">2. Speak Your Mind</h3>
+                    <p class="text-gray-500">Use voice notes to express your thoughts and feelings, helping you release stress naturally.</p>
+                </div>
+
+                <!-- Step 3 -->
+                <div class="fade-in flex-1 min-w-[200px] text-center" style="animation-delay: 0.6s;">
+                    <div class="bg-green-100/50 p-6 rounded-full inline-block mb-4">
+                        <!-- Chat Icon -->
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M8 10h8m-8 4h6m-2 4h2m6-10v8a2 2 0 01-2 2H6l-4 4V6a2 2 0 012-2h12a2 2 0 012 2z" />
+                        </svg>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-2">3. Connect & Seek Support</h3>
+                    <p class="text-gray-500">Chat with AI or professionals to get guidance, resources, and emotional support whenever needed.</p>
+                </div>
+            </div>
+
+            </div>
+        </section>
+        
+        <!-- Features Section -->
+        <section id="features" class="py-20">
+            <div class="container mx-auto px-6">
+                <div class="text-center mb-16">
+                    <h2 class="text-3xl md:text-4xl font-bold">Technology Meets Empathy</h2>
+                    <p class="text-gray-600 mt-4 max-w-2xl mx-auto">Explore how our innovative features support your mental wellness journey.</p>
+                </div>
+                <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    <!-- Feature 1 -->
+                    <div class="bg-white p-8 rounded-2xl shadow-sm feature-card">
+                        <h3 class="text-xl font-bold mb-3">AI Emotion Analysis</h3>
+                        <p class="text-gray-500">Leverages cutting-edge facial recognition to understand your emotional state beyond words.</p>
+                    </div>
+                    <!-- Feature 2 -->
+                    <div class="bg-white p-8 rounded-2xl shadow-sm feature-card">
+                        <h3 class="text-xl font-bold mb-3">Personalized Counseling</h3>
+                        <p class="text-gray-500">Receive counseling plans and mindfulness exercises tailored specifically to your unique needs.</p>
+                    </div>
+                    <!-- Feature 3 -->
+                    <div class="bg-white p-8 rounded-2xl shadow-sm feature-card">
+                        <h3 class="text-xl font-bold mb-3">Confidential & Secure</h3>
+                        <p class="text-gray-500">Your data is encrypted and protected. We are committed to maintaining your complete privacy.</p>
+                    </div>
+                    <!-- Feature 4 -->
+                    <div class="bg-white p-8 rounded-2xl shadow-sm feature-card">
+                        <h3 class="text-xl font-bold mb-3">Progress Tracking</h3>
+                        <p class="text-gray-500">Visually track your emotional well-being over time and celebrate your growth.</p>
+                    </div>
+                    <!-- Feature 5 -->
+                    <div class="bg-white p-8 rounded-2xl shadow-sm feature-card">
+                        <h3 class="text-xl font-bold mb-3">Resource Library</h3>
+                        <p class="text-gray-500">Access a curated library of articles, guided meditations, and tools for mental wellness.</p>
+                    </div>
+                    <!-- Feature 6 -->
+                    <!-- <div class="bg-white p-8 rounded-2xl shadow-sm feature-card">
+                        <h3 class="text-xl font-bold mb-3">Certified Counselors</h3>
+                        <p class="text-gray-500">Option to connect with our network of professional and compassionate counselors.</p>
+                    </div> -->
+                </div>
+            </div>
+        </section>
+        
+        <!-- About Section -->
+        <!-- <section id="about" class="py-20 bg-white">
+            <div class="container mx-auto px-6">
+                <div class="flex flex-col md:flex-row items-center gap-12">
+                    <div class="md:w-1/2">
+                        <img src="https://placehold.co/600x400/A5D6A7/333333?text=Our+Team" alt="Koottu" class="rounded-2xl shadow-lg w-full">
+                    </div> -->
+                   <!-- <center><div class="md:w-1/2">
+                        <h2  class="text-3xl font-bold mb-4">Our Mission: Wellness for All</h2>
+                         <p class="text-gray-600 mb-4">
+                            At koottu, we believe everyone deserves access to personalized mental health support. We started with a simple idea: what if technology could help us better understand ourselves? By blending artificial intelligence with human empathy, we aim to break down barriers to mental wellness and empower individuals to live happier, more balanced lives.
+                         </p>
+                         <p class="text-gray-600">
+                             We are a team of technologists, designers, dedicated to creating a safe, supportive, and insightful experience for you.
+                         </p>
+                    </div></center> -->
+                </div>
+            </div>
+        </section>
+
+        <!-- CTA Section -->
+        <section class="bg-green-25 text-black py-20">
+            <div class="container mx-auto px-6 text-center">
+                <h2 class="text-3xl md:text-4xl font-bold mb-4">Ready to Begin Your Transformation?</h2>
+                <p class="text-black max-w-xl mx-auto mb-8">
+                    Take the first step towards a more mindful and balanced life. Your journey to inner peace starts now.
+                </p>
+                <a href="#" class="bg-white text-green-700 px-8 py-4 rounded-full cta-button text-lg font-semibold inline-block">Try The Analysis</a>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-green-25 text-black py-12">
+        <div class="container mx-auto px-6 text-center">
+            <p>&copy; Koottu. All rights reserved.</p>
+            <div class="flex justify-center space-x-6 mt-4">
+                <a href="#" class="text-gray-400 hover:text-white">Privacy Policy</a>
+                <a href="#" class="text-gray-400 hover:text-white">Terms of Service</a>
+                <a href="#" class="text-gray-400 hover:text-white">Contact Us</a>
+            </div>
+        </div>
+    </footer>
+
+</body>
+</html>

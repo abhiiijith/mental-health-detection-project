@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mental Health • Admin Dashboard</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com"></script>
+
+<style>
+body{
+  font-family:'Inter',sans-serif;
+  background:linear-gradient(135deg,#ecfdf5,#f0fdf4,#f9fafb);
+}
+
+/* Glass effect */
+.glass{
+  background:rgba(255,255,255,0.65);
+  backdrop-filter:blur(14px);
+  -webkit-backdrop-filter:blur(14px);
+  border:1px solid rgba(255,255,255,0.3);
+}
+
+/* Glow hover */
+.card-hover{
+  transition:all .35s ease;
+}
+.card-hover:hover{
+  transform:translateY(-8px);
+  box-shadow:0 25px 50px rgba(0,0,0,.12);
+}
+
+/* Sidebar link */
+.nav-link{
+  transition:.3s;
+}
+.nav-link:hover{
+  background:linear-gradient(to right,#d1fae5,#ecfdf5);
+  transform:translateX(5px);
+}
+
+/* Live badge pulse */
+@keyframes pulse-dot {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
+}
+.live-dot { animation: pulse-dot 1.5s ease-in-out infinite; }
+</style>
+</head>
+
+<body class="min-h-screen flex">
+
+<!-- SIDEBAR -->
+<aside class="w-72 glass border-r border-green-100 p-8 hidden md:flex flex-col">
+
+  <h2 class="text-2xl font-extrabold text-green-700 mb-10 flex items-center gap-3">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+    <i class="fas fa-brain text-3xl"></i>
+    Mental Health Detection
+  </h2>
+  <p class="text-xs text-gray-400 -mt-8 mb-8 ml-1">Admin Panel</p>
+
+  <nav class="space-y-3 text-gray-700 font-medium">
+    <a class="nav-link block px-4 py-3 rounded-2xl bg-green-100 text-green-700 font-semibold">
+      Dashboard
+    </a>
+    <a href="/userlist/" class="nav-link block px-4 py-3 rounded-2xl">Users</a>
+    <a href="/feedbacklist/" class="nav-link block px-4 py-3 rounded-2xl">Feedback</a>
+  </nav>
+
+  <a href="/logout/"
+     class="mt-auto text-red-500 font-semibold px-4 py-3 rounded-2xl hover:bg-red-50 transition">
+     Logout
+  </a>
+
+</aside>
+
+<!-- MAIN -->
+<main class="flex-1 p-10">
+
+  <!-- HEADER -->
+  <div class="flex justify-between items-center mb-12">
+    <div>
+      <h1 class="text-4xl font-extrabold text-gray-800 tracking-tight">
+        Admin Dashboard
+      </h1>
+      <p class="text-gray-500 mt-2 text-lg">
+        AI-based Mental Health Detection Overview
+      </p>
+    </div>
+
+    <div class="bg-green-600 text-white px-6 py-3 rounded-2xl shadow-lg flex items-center gap-2">
+      <span class="live-dot inline-block w-2 h-2 rounded-full bg-white"></span>
+      Live System Status &bull; Active
+    </div>
+  </div>
+
+  <!-- STATS -->
+  <section class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 mb-14">
+
+    <div class="glass rounded-3xl p-8 card-hover">
+      <p class="text-gray-500 text-sm uppercase">Total Users</p>
+      <h2 class="text-4xl font-extrabold text-green-700 mt-3">{{ total_users }}</h2>
+      <p class="text-green-600 text-sm mt-2">Registered accounts</p>
+    </div>
+
+    <div class="glass rounded-3xl p-8 card-hover">
+      <p class="text-gray-500 text-sm uppercase">Total Scans</p>
+      <h2 class="text-4xl font-extrabold text-green-700 mt-3">{{ total_scans }}</h2>
+      <p class="text-green-600 text-sm mt-2">Emotion logs recorded</p>
+    </div>
+
+    <div class="glass rounded-3xl p-8 card-hover">
+      <p class="text-gray-500 text-sm uppercase">High Risk</p>
+      <h2 class="text-4xl font-extrabold text-red-500 mt-3">{{ depression }}</h2>
+      <p class="text-red-500 text-sm mt-2">Depression detections</p>
+    </div>
+
+    <div class="glass rounded-3xl p-8 card-hover">
+      <p class="text-gray-500 text-sm uppercase">Stress Cases</p>
+      <h2 class="text-4xl font-extrabold text-yellow-500 mt-3">{{ stress }}</h2>
+      <p class="text-yellow-500 text-sm mt-2">Stress detections</p>
+    </div>
+
+  </section>
+
+  <!-- DISTRIBUTION -->
+  <section class="grid md:grid-cols-2 gap-10 mb-14">
+
+    <div class="glass rounded-3xl p-8 card-hover">
+      <h3 class="font-bold text-xl text-gray-800 mb-6">Detected Mental States</h3>
+      <div class="space-y-5 text-sm">
+
+        <!-- Normal -->
+        {% with pct=normal|floatformat:0 %}
+        <div>
+          <div class="flex justify-between mb-1">
+            <span>Normal</span>
+            <span class="text-green-600 font-semibold">{{ normal }} scans</span>
+          </div>
+          <div class="h-2 bg-gray-200 rounded-full">
+            <div class="h-2 bg-green-500 rounded-full"
+                 style="width: {% widthratio normal total_emotions 100 %}%"></div>
+          </div>
+        </div>
+        {% endwith %}
+
+        <!-- Stress -->
+        <div>
+          <div class="flex justify-between mb-1">
+            <span>Stress</span>
+            <span class="text-yellow-500 font-semibold">{{ stress }} scans</span>
+          </div>
+          <div class="h-2 bg-gray-200 rounded-full">
+            <div class="h-2 bg-yellow-400 rounded-full"
+                 style="width: {% widthratio stress total_emotions 100 %}%"></div>
+          </div>
+        </div>
+
+        <!-- Anxiety -->
+        <div>
+          <div class="flex justify-between mb-1">
+            <span>Anxiety</span>
+            <span class="text-orange-500 font-semibold">{{ anxiety }} scans</span>
+          </div>
+          <div class="h-2 bg-gray-200 rounded-full">
+            <div class="h-2 bg-orange-400 rounded-full"
+                 style="width: {% widthratio anxiety total_emotions 100 %}%"></div>
+          </div>
+        </div>
+
+        <!-- Depression -->
+        <div>
+          <div class="flex justify-between mb-1">
+            <span>Depression</span>
+            <span class="text-red-500 font-semibold">{{ depression }} scans</span>
+          </div>
+          <div class="h-2 bg-gray-200 rounded-full">
+            <div class="h-2 bg-red-400 rounded-full"
+                 style="width: {% widthratio depression total_emotions 100 %}%"></div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="glass rounded-3xl p-8 card-hover text-center flex flex-col justify-center">
+      <h3 class="font-bold text-xl text-gray-800 mb-6">Detection Summary</h3>
+      <p class="text-6xl font-extrabold text-green-600 tracking-tight">{{ total_scans }}</p>
+      <p class="text-gray-500 mt-4">Total emotion scans recorded in system</p>
+      <div class="mt-6 grid grid-cols-2 gap-3 text-sm">
+        <div class="bg-green-50 rounded-xl p-3">
+          <p class="text-green-700 font-bold text-lg">{{ normal }}</p>
+          <p class="text-gray-500">Normal</p>
+        </div>
+        <div class="bg-yellow-50 rounded-xl p-3">
+          <p class="text-yellow-600 font-bold text-lg">{{ stress }}</p>
+          <p class="text-gray-500">Stress</p>
+        </div>
+        <div class="bg-orange-50 rounded-xl p-3">
+          <p class="text-orange-600 font-bold text-lg">{{ anxiety }}</p>
+          <p class="text-gray-500">Anxiety</p>
+        </div>
+        <div class="bg-red-50 rounded-xl p-3">
+          <p class="text-red-600 font-bold text-lg">{{ depression }}</p>
+          <p class="text-gray-500">Depression</p>
+        </div>
+      </div>
+    </div>
+
+  </section>
+
+  <!-- RECENT TABLE -->
+  <section class="glass rounded-3xl p-8 card-hover">
+    <h3 class="font-bold text-xl text-gray-800 mb-6">Recent AI Analysis</h3>
+
+    <div class="overflow-x-auto">
+      <table class="w-full text-left">
+        <thead>
+          <tr class="text-sm text-gray-500 border-b">
+            <th class="py-4">User</th>
+            <th>Mode</th>
+            <th>State</th>
+            <th>Severity</th>
+            <th>Date &amp; Time</th>
+          </tr>
+        </thead>
+
+        <tbody class="text-sm">
+          {% for item in recent %}
+          <tr class="border-b hover:bg-green-50 transition">
+            <td class="py-4 font-semibold">{{ item.user.name }}</td>
+            <td>{{ item.mode }}</td>
+            <td class="font-semibold
+              {% if item.emotion == 'normal' %}text-green-600
+              {% elif item.emotion == 'stress' %}text-yellow-600
+              {% elif item.emotion == 'anxiety' %}text-orange-600
+              {% else %}text-red-600{% endif %}">
+              {{ item.emotion|capfirst }}
+            </td>
+            <td>
+              {% if item.emotion == 'normal' %}Low
+              {% elif item.emotion == 'stress' %}Medium
+              {% elif item.emotion == 'anxiety' %}Medium
+              {% else %}High{% endif %}
+            </td>
+            <td>{{ item.timestamp|date:"M d, Y H:i" }}</td>
+          </tr>
+          {% empty %}
+          <tr>
+            <td colspan="5" class="py-8 text-center text-gray-400">No emotion scans recorded yet.</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+
+  </section>
+
+</main>
+
+</body>
+
+<!-- ✅ Live auto-refresh every 2 seconds -->
+<script>
+  setInterval(() => { location.reload(); }, 2000);
+</script>
+
+</html>

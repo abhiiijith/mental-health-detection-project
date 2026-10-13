@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Capture Image</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      background: #f3f3f3;
+      padding-top: 50px;
+    }
+    video {
+      width: 60%;
+      max-width: 600px;
+      border: 2px solid #333;
+      border-radius: 8px;
+    }
+    button {
+      margin-top: 20px;
+      padding: 10px 20px;
+      font-size: 16px;
+      border: none;
+      background: #007BFF;
+      color: white;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #0056b3;
+    }
+    #message {
+      margin-top: 20px;
+      color: green;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+
+  <h2>Capture Image Using Camera</h2>
+  
+  <!-- Live camera preview -->
+  <video id="video" autoplay></video><br>
+
+  <!-- Button to capture image -->
+  <button id="captureBtn">Capture Image</button>
+
+  <p id="message"></p>
+
+  <script>
+    const video = document.getElementById('video');
+    const message = document.getElementById('message');
+    const captureBtn = document.getElementById('captureBtn');
+
+    // Access system camera
+    navigator.mediaDevices.getUserMedia({ video: true })
+      .then(stream => {
+        video.srcObject = stream;
+      })
+      .catch(err => {
+        message.textContent = 'Camera access denied or not available.';
+        console.error(err);
+      });
+
+    // On button click, call Django view to capture and save image using OpenCV
+    captureBtn.addEventListener('click', () => {
+      message.textContent = 'Capturing image...';
+
+      fetch('/capture_image/')
+        .then(response => response.text())
+        .then(data => {
+          message.textContent = data;
+        })
+        .catch(error => {
+          console.error(error);
+          message.textContent = 'Error capturing image.';
+        });
+    });
+  </script>
+
+</body>
+</html>
