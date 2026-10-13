@@ -218,6 +218,9 @@
 
   <div class="container">
     <!-- LIVE STAT CARDS -->
+     <p style="color: #6b7280; margin-bottom: 20px;">
+    📅 Today: <span id="current-date"></span>
+     </p>
     <div class="cards">
       <div class="card">
         <p>Total Scans</p>
@@ -423,7 +426,14 @@
       </tr>`;
         });
       } catch (e) { /* silent fail */ }
-    }
+    } 
+
+         document.getElementById("current-date").textContent =
+         new Date().toLocaleDateString('en-IN', {
+            day: '2-digit',
+            month: 'long',
+            year: 'numeric'
+        });
 
     setInterval(fetchDashboardData, 2000);
     fetchDashboardData();
